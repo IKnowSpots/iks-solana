@@ -1,8 +1,249 @@
+"use client";
 /* eslint-disable @next/next/no-img-element */
 import Navbar from "@/components/dashboard/create/Navbar";
 import Image from "next/image";
+import { anchorProgram } from "@/program/contract";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import * as anchor from "@project-serum/anchor";
+import { BN } from "bn.js";
+import {
+  Transaction,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  SystemProgram,
+  Keypair,
+  sendAndConfirmTransaction,
+  Connection,
+  clusterApiUrl,
+} from "@solana/web3.js";
+import * as spl from "@solana/spl-token";
 
 const Event = () => {
+  const wallet = useAnchorWallet();
+  const { publicKey, wallets, sendTransaction } = useWallet();
+  const program = anchorProgram(wallet);
+  async function burnSpot() {
+    const connection = new Connection(
+      "https://solana-devnet.g.alchemy.com/v2/cXvNycNK9Q6-fBqXiB1AUDkj9OQ1aNAn"
+    );
+    const transaction = new Transaction();
+    const tokenMintAddress = new PublicKey(
+      "AKbGSFCvcytVsuHPFWwhKW2Da2HddNhGzb8QrGF3N16v"
+    );
+    let event_id = 57355226;
+    // let price = 10000000;
+    // let supply = 100;
+    // let date = 4348374;
+    let [eventAccount, eventAccountBumb] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [
+          Buffer.from("event-data"),
+          new BN(event_id).toArrayLike(Buffer, "le", 8),
+        ],
+        program.programId
+      );
+    let [eventTokenAccount, eventTokenAccountBumb] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [
+          Buffer.from("event-asset"),
+          new BN(event_id).toArrayLike(Buffer, "le", 8),
+        ],
+        program.programId
+      );
+    let _mint_position = 1;
+    let [spotNft, spotNftBumb] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from("spot-nft"),
+        eventAccount.toBuffer(),
+        new BN(_mint_position).toArrayLike(Buffer, "le", 8),
+      ],
+      program.programId
+    );
+
+    let nftAta = await spl.getAssociatedTokenAddress(
+      spotNft,
+      publicKey,
+      false,
+      spl.TOKEN_PROGRAM_ID,
+      spl.ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    const usdcAta = await spl.getAssociatedTokenAddress(
+      tokenMintAddress,
+      publicKey,
+      false,
+      spl.TOKEN_PROGRAM_ID,
+      spl.ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    let escrowBalance =
+      await program.provider.connection.getTokenAccountBalance(
+        eventTokenAccount
+      );
+    console.log("Escrow account balance before:", escrowBalance.value.uiAmount);
+    let ataBalance = await program.provider.connection.getTokenAccountBalance(
+      usdcAta
+    );
+    console.log("ATA balance before:", ataBalance.value.uiAmount);
+
+    const ix = await program.methods
+      .burnSpot(
+        new anchor.BN(event_id),
+        eventTokenAccountBumb,
+        new anchor.BN(_mint_position),
+        spotNftBumb
+      )
+      .accounts({
+        authority: publicKey,
+        eventAccount: eventAccount,
+        tokenMint: tokenMintAddress,
+        eventTokenAccount: eventTokenAccount,
+        tokenAtaSender: usdcAta,
+        spotNft: spotNft,
+        receiverSpotAta: nftAta,
+      })
+      .instruction();
+
+      console.log("instruction added :");
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
+      transaction.add(ix);
+      const signTx = await wallet?.signTransaction(transaction);
+      const serialized_transaction = signTx.serialize();
+      console.log("Here's the transaction", serialized_transaction);
+  
+      const sig = await connection.sendRawTransaction(serialized_transaction);
+      console.log("here's the signature : ", sig);
+
+
+      console.log("--------------- Escrow account balance after -----------------");
+      escrowBalance = await program.provider.connection.getTokenAccountBalance(eventTokenAccount);
+      console.log("Escrow account balance before:", escrowBalance.value.uiAmount);
+      ataBalance = await program.provider.connection.getTokenAccountBalance(usdcAta);
+      console.log("ATA balance before:", ataBalance.value.uiAmount);
+      let nftBalance = await program.provider.connection.getTokenAccountBalance(nftAta);
+      console.log("ATA balance of nft:", nftBalance.value.uiAmount);
+  }
+  async function claimSpot() {
+    const connection = new Connection(
+      "https://solana-devnet.g.alchemy.com/v2/cXvNycNK9Q6-fBqXiB1AUDkj9OQ1aNAn"
+    );
+    const transaction = new Transaction();
+    const tokenMintAddress = new PublicKey(
+      "AKbGSFCvcytVsuHPFWwhKW2Da2HddNhGzb8QrGF3N16v"
+    );
+
+    let event_id = 57355226;
+    // let price = 10000000;
+    // let supply = 100;
+    // let date = 4348374;
+    let [eventAccount, eventAccountBumb] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [
+          Buffer.from("event-data"),
+          new BN(event_id).toArrayLike(Buffer, "le", 8),
+        ],
+        program.programId
+      );
+    let [eventTokenAccount, eventTokenAccountBumb] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [
+          Buffer.from("event-asset"),
+          new BN(event_id).toArrayLike(Buffer, "le", 8),
+        ],
+        program.programId
+      );
+
+    let _mint_position = 2;
+    let [spotNft, spotNftBumb] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from("spot-nft"),
+        eventAccount.toBuffer(),
+        new BN(_mint_position).toArrayLike(Buffer, "le", 8),
+      ],
+      program.programId
+    );
+
+    let nftAta = await spl.getAssociatedTokenAddress(
+      spotNft,
+      publicKey,
+      false,
+      spl.TOKEN_PROGRAM_ID,
+      spl.ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    const usdcAta = await spl.getAssociatedTokenAddress(
+      tokenMintAddress,
+      publicKey,
+      false,
+      spl.TOKEN_PROGRAM_ID,
+      spl.ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    const ix = await program.methods
+      .mintSpot(
+        new anchor.BN(event_id),
+        eventTokenAccountBumb,
+        new anchor.BN(_mint_position)
+      )
+      .accounts({
+        authority: publicKey,
+        eventAccount: eventAccount,
+        tokenMint: tokenMintAddress,
+        eventTokenAccount: eventTokenAccount,
+        tokenAtaSender: usdcAta,
+        spotNft: spotNft,
+        receiverSpotAta: nftAta,
+      })
+      .instruction();
+    let tokenInEventAccount = await program.account.eventAccount.fetch(
+      eventAccount
+    );
+
+    console.log("Event Account is : ", tokenInEventAccount.token.toBase58());
+
+    console.log("instruction added :");
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = publicKey;
+    transaction.add(ix);
+    const signTx = await wallet?.signTransaction(transaction);
+    const serialized_transaction = signTx.serialize();
+    console.log("Here's the transaction", serialized_transaction);
+
+    const sig = await connection.sendRawTransaction(serialized_transaction);
+    console.log("here's the signature : ", sig);
+
+    // Fetch the escrow account data
+    let eventData = await program.account.eventAccount.fetch(eventAccount);
+    console.log(eventData);
+
+    // Check the escrow account balance
+    console.log(
+      "--------------- Escrow account balance after -----------------"
+    );
+    let escrowBalance =
+      await program.provider.connection.getTokenAccountBalance(
+        eventTokenAccount
+      );
+    console.log("Escrow account balance before:", escrowBalance.value.uiAmount);
+    let ataBalance = await program.provider.connection.getTokenAccountBalance(
+      usdcAta
+    );
+    console.log("ATA balance before:", ataBalance.value.uiAmount);
+    let nftBalance = await program.provider.connection.getTokenAccountBalance(
+      nftAta
+    );
+    console.log("ATA balance of nft:", nftBalance.value.uiAmount);
+  }
+
+  async function claim() {
+    await claimSpot();
+  }
+  async function unstake() {
+    await burnSpot();
+  }
   return (
     <div className="bg-[#25143a] text-white px-8 ">
       <Navbar />
@@ -89,8 +330,17 @@ const Event = () => {
               </svg>
             </div>
           </div>
-          <button className="bg-white text-black px-4 py-2 w-1/3 mx-auto    ">
+          <button
+            className="bg-white text-black px-4 py-2 w-1/3 mx-auto    "
+            onClick={claim}
+          >
             Claim Now
+          </button>
+          <button
+            className="bg-white text-black px-4 py-2 w-1/3 mx-auto mt-4   "
+            onClick={unstake}
+          >
+            Unstake
           </button>
         </div>
       </div>
