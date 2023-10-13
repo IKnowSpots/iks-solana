@@ -17,9 +17,16 @@ import {
     Connection,
     clusterApiUrl,
 } from "@solana/web3.js";
+import { Iknowspots } from "../../../target/types/iknowspots";
+import { anchorProgram } from "@/program/contract";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import * as anchor from "@project-serum/anchor";
+import { BN } from "bn.js";
 
 const Create = () => {
-    const { publicKey, wallets, sendTransaction } = useWallet();
+    const wallet = useAnchorWallet();
+    const { publicKey,wallets, sendTransaction } = useWallet();
+    const program = anchorProgram(wallet);    
     const [formInput, setFormInput] = useState({
         shortlist: false,
         stake: false,
@@ -33,35 +40,60 @@ const Create = () => {
     });
     const [loading, setLoading] = useState(false);
 
-    async function createEvent(amount: any) {
-        const generateUniqueId = (() => {
-            let id = 0;
-
-            return () => {
-                return ++id;
-            };
-        })();
-        
+    async function createEvent() {
+        function getRandomNumber(): number {
+            // Generate a random decimal between 0 (inclusive) and 1 (exclusive)
+            const randomDecimal = Math.random();
+          
+            // Scale and shift the random decimal to get a random integer between 1 and 100000000
+            const randomNumber = Math.floor(randomDecimal * 100000000) + 1;
+          
+            return randomNumber;
+          }
         //   const connection = new Connection(clusterApiUrl("devnet"));
-        const connection = new Connection(clusterApiUrl("devnet"));
+        const connection = new Connection("https://solana-devnet.g.alchemy.com/v2/cXvNycNK9Q6-fBqXiB1AUDkj9OQ1aNAn");
         const transaction = new Transaction();
         const kpid = Keypair.generate();
-        console.log(
-            `Sender is ${publicKey} and the receiver is ${kpid.publicKey}`
+        console.log(`Sender is ${publicKey} and the receiver is ${kpid.publicKey}`);
+        let event_id = getRandomNumber();
+        console.log("event id is : ", event_id);
+        console.log("event_id is :", event_id);
+        let date = 1697132758;
+        console.log(program.programId.toBase58());
+        let [eventAccount, eventAccountBumb] = await anchor.web3.PublicKey.findProgramAddress(
+          [Buffer.from("event-data"), new BN(event_id).toArrayLike(Buffer,"le",8)],
+          program.programId
         );
-
-        if (publicKey == null) return;
-        const sendSolInstruction = SystemProgram.transfer({
-            fromPubkey: publicKey,
-            toPubkey: kpid.publicKey,
-            lamports: LAMPORTS_PER_SOL * amount,
-        });
-
-        transaction.add(sendSolInstruction);
-
-        sendTransaction(transaction, connection).then((sig) => {
-            console.log(sig);
-        });
+        let [eventTokenAccount, eventTokenAccountBumb] = await anchor.web3.PublicKey.findProgramAddress(
+          [Buffer.from("event-asset"), new BN(event_id).toArrayLike(Buffer,"le",8)],
+          program.programId
+        );
+        const tokenMintAddress = new PublicKey("AKbGSFCvcytVsuHPFWwhKW2Da2HddNhGzb8QrGF3N16v");
+        const ix = await program.methods.eventCreation(
+            new anchor.BN(event_id),
+            new anchor.BN(formInput.stakePrice),
+            new anchor.BN(formInput.supply),
+            new anchor.BN(date)
+            ).accounts(
+            {
+              authority : publicKey,
+              eventAccount : eventAccount,
+              tokenMint : tokenMintAddress,
+              eventTokenAccount : eventTokenAccount
+            }
+          ).instruction();
+            console.log("instruction added :");
+        const { blockhash } = await connection.getLatestBlockhash();
+        transaction.recentBlockhash = blockhash;
+        transaction.feePayer = publicKey;
+            transaction.add(ix);
+            const signTx = await wallet?.signTransaction(transaction);
+        const serialized_transaction = signTx.serialize();
+        console.log("Here's the transaction",serialized_transaction);
+        
+      
+        const sig = await connection.sendRawTransaction(serialized_transaction);
+        console.log("signature is : ", sig);
         console.log("public key detected", publicKey);
         console.log("event created");
     }
@@ -80,7 +112,7 @@ const Create = () => {
     async function publish() {
         setLoading(true);
         const uri = await formURI();
-        await createEvent(0.1);
+        await createEvent();
         setLoading(false);
     }
 

@@ -128,6 +128,79 @@ export type Iknowspots = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "burnSpot",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "eventAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAtaSender",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "spotNft",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "receiverSpotAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "eventId",
+          "type": "u64"
+        },
+        {
+          "name": "eventBump",
+          "type": "u8"
+        },
+        {
+          "name": "mintPosition",
+          "type": "u64"
+        },
+        {
+          "name": "spotNftBump",
+          "type": "u8"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -339,6 +412,79 @@ export const IDL: Iknowspots = {
         {
           "name": "mintPosition",
           "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "burnSpot",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "eventAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAtaSender",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "spotNft",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "receiverSpotAta",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "eventId",
+          "type": "u64"
+        },
+        {
+          "name": "eventBump",
+          "type": "u8"
+        },
+        {
+          "name": "mintPosition",
+          "type": "u64"
+        },
+        {
+          "name": "spotNftBump",
+          "type": "u8"
         }
       ]
     }

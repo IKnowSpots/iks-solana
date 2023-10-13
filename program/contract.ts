@@ -5,9 +5,9 @@ import * as spl from '@solana/spl-token';
 import type { Iknowspots } from './program';
 import { IDL } from './program';
 
-const PROGRAM_ID = "GFdi1BHL6qCJbcozApdfegbHRPiXKrC4gxpRuqsaduZv";
+const PROGRAM_ID = "5DZ3TPTSjmBUMRzyQJUrj2mSULMU1CP3Q9WTP3Ytere4";
 
-const RPC_URL = "https://api.devnet.solana.com/";
+const RPC_URL = "https://solana-devnet.g.alchemy.com/v2/cXvNycNK9Q6-fBqXiB1AUDkj9OQ1aNAn";
 
 export const connection = new anchor.web3.Connection(RPC_URL, 'confirmed');
 
