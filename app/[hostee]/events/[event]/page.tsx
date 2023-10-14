@@ -17,12 +17,15 @@ import {
   clusterApiUrl,
 } from "@solana/web3.js";
 import * as spl from "@solana/spl-token";
+import { Wallet } from "@coral-xyz/anchor";
 
 const Event = () => {
   const wallet = useAnchorWallet();
   const { publicKey, wallets, sendTransaction } = useWallet();
-  const program = anchorProgram(wallet);
-  async function burnSpot() {
+  const program = anchorProgram(wallet as Wallet);
+    async function burnSpot() {
+      let escrowBalance;
+      let ataBalance;
     const connection = new Connection(
       "https://solana-devnet.g.alchemy.com/v2/cXvNycNK9Q6-fBqXiB1AUDkj9OQ1aNAn"
     );
@@ -30,7 +33,7 @@ const Event = () => {
     const tokenMintAddress = new PublicKey(
       "AKbGSFCvcytVsuHPFWwhKW2Da2HddNhGzb8QrGF3N16v"
     );
-    let event_id = 57355226;
+    let event_id = 95875834;
     // let price = 10000000;
     // let supply = 100;
     // let date = 4348374;
@@ -50,7 +53,7 @@ const Event = () => {
         ],
         program.programId
       );
-    let _mint_position = 1;
+    let _mint_position = 5;
     let [spotNft, spotNftBumb] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from("spot-nft"),
@@ -76,12 +79,12 @@ const Event = () => {
       spl.ASSOCIATED_TOKEN_PROGRAM_ID
     );
 
-    let escrowBalance =
+     escrowBalance =
       await program.provider.connection.getTokenAccountBalance(
         eventTokenAccount
       );
     console.log("Escrow account balance before:", escrowBalance.value.uiAmount);
-    let ataBalance = await program.provider.connection.getTokenAccountBalance(
+     ataBalance = await program.provider.connection.getTokenAccountBalance(
       usdcAta
     );
     console.log("ATA balance before:", ataBalance.value.uiAmount);
@@ -119,13 +122,15 @@ const Event = () => {
 
       console.log("--------------- Escrow account balance after -----------------");
       escrowBalance = await program.provider.connection.getTokenAccountBalance(eventTokenAccount);
-      console.log("Escrow account balance before:", escrowBalance.value.uiAmount);
+      console.log("Escrow account balance after:", escrowBalance.value.uiAmount);
       ataBalance = await program.provider.connection.getTokenAccountBalance(usdcAta);
-      console.log("ATA balance before:", ataBalance.value.uiAmount);
+      console.log("ATA balance after:", ataBalance.value.uiAmount);
       let nftBalance = await program.provider.connection.getTokenAccountBalance(nftAta);
       console.log("ATA balance of nft:", nftBalance.value.uiAmount);
   }
   async function claimSpot() {
+    let escrowBalance;
+    let ataBalance;
     const connection = new Connection(
       "https://solana-devnet.g.alchemy.com/v2/cXvNycNK9Q6-fBqXiB1AUDkj9OQ1aNAn"
     );
@@ -134,7 +139,7 @@ const Event = () => {
       "AKbGSFCvcytVsuHPFWwhKW2Da2HddNhGzb8QrGF3N16v"
     );
 
-    let event_id = 57355226;
+    let event_id = 95875834;
     // let price = 10000000;
     // let supply = 100;
     // let date = 4348374;
@@ -155,7 +160,7 @@ const Event = () => {
         program.programId
       );
 
-    let _mint_position = 2;
+    let _mint_position = 5;
     let [spotNft, spotNftBumb] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from("spot-nft"),
@@ -180,6 +185,14 @@ const Event = () => {
       spl.TOKEN_PROGRAM_ID,
       spl.ASSOCIATED_TOKEN_PROGRAM_ID
     );
+
+
+      // Check the escrow account balance
+escrowBalance = await program.provider.connection.getTokenAccountBalance(eventTokenAccount);
+console.log("Escrow account balance before:", escrowBalance.value.uiAmount);
+ataBalance = await program.provider.connection.getTokenAccountBalance(usdcAta);
+console.log("ATA balance before:", ataBalance.value.uiAmount);
+
 
     const ix = await program.methods
       .mintSpot(
@@ -223,12 +236,12 @@ const Event = () => {
     console.log(
       "--------------- Escrow account balance after -----------------"
     );
-    let escrowBalance =
+     escrowBalance =
       await program.provider.connection.getTokenAccountBalance(
         eventTokenAccount
       );
     console.log("Escrow account balance before:", escrowBalance.value.uiAmount);
-    let ataBalance = await program.provider.connection.getTokenAccountBalance(
+     ataBalance = await program.provider.connection.getTokenAccountBalance(
       usdcAta
     );
     console.log("ATA balance before:", ataBalance.value.uiAmount);

@@ -22,11 +22,13 @@ import { anchorProgram } from "@/program/contract";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import * as anchor from "@project-serum/anchor";
 import { BN } from "bn.js";
+import { Wallet } from "@coral-xyz/anchor";
+
 
 const Create = () => {
     const wallet = useAnchorWallet();
     const { publicKey,wallets, sendTransaction } = useWallet();
-    const program = anchorProgram(wallet);    
+    const program = anchorProgram(wallet as Wallet);    
     const [formInput, setFormInput] = useState({
         shortlist: false,
         stake: false,
