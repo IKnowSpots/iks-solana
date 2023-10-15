@@ -8,8 +8,8 @@ const Events = () => {
       <div className="w-full flex flex-col items-center">
         <div className="flex justify-center w-[80%] gap-8">
           <button className="bg-white w-[20%] p-3 rounded-[30px] text-[#090312] font-semibold">All Events</button>
-          <button className="bg-white w-[20%] p-3 rounded-[30px] text-[#090312] font-semibold">Upcoming</button>
-          <button className="bg-white w-[20%] p-3 rounded-[30px] text-[#090312] font-semibold">Attended</button>
+          <button className="bg-white/50 w-[20%] p-3 rounded-[30px] text-[#090312] font-semibold">Upcoming</button>
+          <button className="bg-white/50 w-[20%] p-3 rounded-[30px] text-[#090312] font-semibold">Attended</button>
         </div>
         <div className="flex w-[75%] gap-4 justify-between bg-[#56565680] p-8 my-6 sm:my-8 rounded-xl gap-12">
           <div className="flex flex-col gap-4">

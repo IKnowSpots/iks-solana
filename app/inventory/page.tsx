@@ -8,8 +8,15 @@ import { fetchUsername } from "@/utils";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Image from "next/image";
+import Link from "next/link";
+// import {useRouter} from "next/router";
+
 
 const EventsByHost = () => {
+    // const router = useRouter();
+    // const handleClick = () => {
+    //     router.push('/inventory/rewards');
+    //   };
     const [username, setUsername] = useState("iamacid");
     const [hostAddress, setHostAddress] = useState<String | undefined>();
     const [loading, setLoading] = useState(false);
@@ -50,7 +57,13 @@ const EventsByHost = () => {
                     className="text-white h-[40px] border-white w-[20rem] bg-[#1C1C1C]  rounded-full px-4 "
                 />
             </div>
-            <Rewards />
+
+            <div>
+                <Link href="/inventory/rewards">
+                    <Rewards />
+                </Link>
+            </div>
+
 
             <div className="w-full mt-[5rem]">
                 <div className="flex flex-col-reverse lg:flex-row mx-8">
