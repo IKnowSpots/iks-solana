@@ -40,8 +40,8 @@ const Calendar: React.FC = () => {
   };
 
   return (
-    <div className=" mt-8">
-      <div className="bg-[#3C3C3C] rounded-tl-3xl rounded-tr-3xl rounded-bl-none rounded-br-none text-center pb-4">
+    <div className=" my-8">
+      <div className="bg-[#3C3C3C] rounded-tl-3xl rounded-tr-3xl rounded-bl-none rounded-br-none text-center py-4">
         <h2 className="text-lg font-semibold">{currentDate.format('MMMM YYYY')}</h2>
       </div>
       <div className="bg-[#3C3C3C] rounded-tl-none rounded-tr-none rounded-bl-3xl rounded-br-3xl p-6 grid grid-cols-7 gap-2">{renderCalendar()}</div>

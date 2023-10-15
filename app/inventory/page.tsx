@@ -53,7 +53,7 @@ const EventsByHost = () => {
             <Rewards />
 
             <div className="w-full mt-[5rem]">
-                <div className="flex">
+                <div className="flex flex-col-reverse lg:flex-row mx-8">
                     <Events />
                     <MyCalender/>
                 </div>
