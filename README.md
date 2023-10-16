@@ -6,4 +6,4 @@ We prioritize community leaders and organizers, providing them with user-friendl
 
 ![image](https://github.com/IKnowSpots/solana/assets/72652234/fc68318a-5871-4dd3-b2d4-771079ae3c95)
 
-Do check out!! solana.iknowspots.com
+Do check out!! <a href="https://solana.iknowspots.com/">solana.iknowspots.com</a>
