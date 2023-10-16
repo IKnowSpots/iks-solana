@@ -17,6 +17,8 @@ const WalletsProvider = dynamic(
 );
 
 const Navbar = () => {
+    const [showModal, setShowModal] = useState(false);
+
 
     const [Toggle,setToggle]=useState(true);
 
@@ -106,9 +108,11 @@ const Navbar = () => {
                 </Link>
 
                 <div className="flex gap-[10%] text-[0.5rem] lg:text-base">
-                    <p className="border border-[#C584F5] px-4 py-2 rounded-xl w-[210px]">
+                    <button className="border border-[#C584F5] px-4 py-2 rounded-xl w-[210px] text-white justify-center text-center ml-4"
+   >
                         <WalletsProvider />
-                    </p>
+                        {/* Connect Wallet */}
+                    </button>
 
                     <button onClick={pushingInventory}>
                         <p className="border border-[#C584F5] px-4 py-2 rounded-xl">
@@ -144,6 +148,7 @@ const Navbar = () => {
                 <div className="flex flex-col justify-center items-center gap-8 ">
                     <p className="border border-[#C584F5] px-4 py-2 rounded-xl w-[210px]">
                         <WalletsProvider />
+                        
                     </p>
 
                     <button onClick={pushingInventory}>
@@ -153,6 +158,23 @@ const Navbar = () => {
                     </button>
                 </div>
             </div>
+            {/* {showModal ? (
+        <div className="fixed top-0 left-0 w-screen h-screen flex items-center
+        justify-center bg-black bg-opacity-50 transform
+        transition-transform duration-300">
+            <div className="bg-[#151c25] shadow-xl shadow-[#8A42D8] rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
+
+            
+            <WalletsProvider />
+          <button
+            className="my-5 w-auto px-8 h-10 bg-blue-600 text-white rounded-md shadow hover:shadow-lg font-semibold justify-between items-center"
+            onClick={() => setShowModal(false)}
+          >
+            Close
+          </button>
+          </div>
+        </div>
+      ) : null} */}
 
         </nav>
     );

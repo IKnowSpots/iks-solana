@@ -11,9 +11,11 @@ const HeroSection = () => {
         <p className="m-5 text-lg sm:text-xl">
           Seamless granular events hosting with NFT tickets.
         </p>
-        <Link className="" target="_blank" href="https://youtu.be/dQw4w9WgXcQ?si=EZJTnscJMGKz1Bvd">
-        <button className="cta-button w-full px-4 sm:px-6 py-1 text-[0.8rem] sm:text-[1rem]">Demo Video</button>
-        </Link>
+<div>
+<a className="cta-button w-full px-4 sm:px-6 py-1 text-[0.8rem] sm:text-[1rem]" href="https://www.youtube.com/watch?v=2iu2g7btF9A">
+    Demo Video</a>
+</div>
+
       </div>
       <div id="parent-div" className="relative hidden sm:flex w-full p-6 flex justify-center items-center">
         <Image

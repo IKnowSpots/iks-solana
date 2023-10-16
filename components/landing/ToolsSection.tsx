@@ -39,7 +39,7 @@ const ToolSection = () => {
         <div className="w-full hidden md:flex justify-end">
           <div className="grad1 blur-[100px] z-[-1] flex h-[639px] w-[40%] absolute"></div>
         </div>
-        <Image src="/features-demo-img.png" width="600" height="100" alt="" />
+        <Image src="/features-demo-img.png" width="600" height="100" alt="" className="rounded-xl" />
       </div>
     </div>
   );

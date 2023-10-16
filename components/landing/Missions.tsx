@@ -24,9 +24,9 @@ const Missions = () => {
             <div className="flex flex-col justify-center items-start">
                 <h1 className="text-4xl sm:text-5xl mt-12 ">Our Mission</h1>
                 <div className="flex justify-around gap-4 pt-6">
-                    <p className="hoverUnderline">Lorum</p>
-                    <p className="hoverUnderline">Lorum</p>
-                    <p className="hoverUnderline">Lorum</p>
+                    <p className="hoverUnderline">Ticketing</p>
+                    <p className="hoverUnderline">Customizable</p>
+                    <p className="hoverUnderline">RSVP Escrow</p>
                 </div>
                 <RenderLorem1 />
             </div>

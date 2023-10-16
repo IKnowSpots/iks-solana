@@ -6,24 +6,6 @@ import { useEffect, useState } from "react";
 const WalletsProvider = () => {
     const { select, wallets, publicKey, disconnect } = useWallet();
 
-    // const [shortPublicKey, setPublicKey] = useState<String>();
-
-    // function shortenString(input: any, maxLength: any) {
-    //     if (input.length <= maxLength) {
-    //         return input; // No need to shorten if it's already shorter than maxLength.
-    //     } else {
-    //         const firstPart = input.slice(0, maxLength / 2);
-    //         const lastPart = input.slice(-maxLength / 2);
-    //         let finalString = firstPart + "..." + lastPart;
-    //         setPublicKey(finalString);
-    //         // return firstPart + "..." + lastPart;
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     console.log("Public Key is ", publicKey);
-    //     shortenString(publicKey, 10);
-    // }, [publicKey]);
 
     let modal = 100;
 
@@ -37,7 +19,10 @@ const WalletsProvider = () => {
     );
 
     function WalletModal() {
+        const [showModal, setShowModal] = useState(false);
+
         return (
+
             <div className="flex flex-col gap-[16px] justify-center items-center">
                 {wallets.filter((wallet) => wallet.readyState === "Installed")
                     .length > 0 ? (
